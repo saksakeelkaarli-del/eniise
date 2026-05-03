@@ -538,6 +538,17 @@ leht = st.session_state.leht
 
 # ── AVALEHT ───────────────────────────────────────────────────────────────────
 
+KIIRTEEMA_FRAASID = {
+    "Kaasav haridus":          "Räägi kaasava hariduse põhimõtete kohta.",
+    "HEV õpilane":             "Räägi HEV õpilase toetamise kohta.",
+    "Individuaalne õppekava":  "Räägi individuaalse õppekava (IÕK) koostamise kohta.",
+    "Tugiteenused koolis":     "Räägi tugiteenuste kohta koolis — tugiõpetaja, logopeed, psühholoog.",
+    "Õpiraskused":             "Räägi õpiraskuste kohta — düsleksia, ADHD ja teised.",
+    "Andekas laps":            "Räägi andeka lapse toetamise kohta koolis.",
+    "Lapsevanemale":           "Räägi lapsevanema rollist ja kooliga koostöö tegemisest.",
+    "Käitumisraskused":        "Räägi käitumisraskuste põhjuste ja lahenduste kohta.",
+}
+
 if leht == "avaleht":
     # Hero — puhas gradient, ei pilt teksti taga
     st.markdown("""
@@ -711,7 +722,18 @@ elif leht == "teema_detail":
 
             # Küsi assistendilt nupp
             st.markdown("<div style='margin-top:1rem;'></div>", unsafe_allow_html=True)
-            if st.button(f"💬 Küsi assistendilt {teema['pealkiri']} kohta", key="ask_ai_teema"):
+            TEEMA_GENITIIV = {
+                "Kaasav haridus":          "kaasava hariduse",
+                "HEV õpilane":             "HEV õpilase toetamise",
+                "Individuaalne õppekava":  "individuaalse õppekava",
+                "Tugiteenused koolis":     "koolisiseste tugiteenuste",
+                "Õpiraskused":             "õpiraskuste",
+                "Andekas laps":            "andeka lapse toetamise",
+                "Lapsevanemale":           "lapsevanema rolli",
+                "Käitumisraskused":        "käitumisraskuste",
+            }
+            gen = TEEMA_GENITIIV.get(teema['pealkiri'], teema['pealkiri'].lower())
+            if st.button(f"💬 Küsi assistendilt {gen} kohta", key="ask_ai_teema"):
                 st.session_state.leht = "assistent"
                 st.session_state.kiirteema = KIIRTEEMA_FRAASID.get(
                         teema['pealkiri'],
@@ -775,17 +797,6 @@ elif leht == "assistent":
     <div style='font-size:0.7rem; color:#8A9A89; text-transform:uppercase;
                 letter-spacing:0.1em; margin-bottom:0.5rem;'>Kiirteemad</div>
     """, unsafe_allow_html=True)
-
-    KIIRTEEMA_FRAASID = {
-        "Kaasav haridus":          "Räägi kaasava hariduse põhimõtete kohta.",
-        "HEV õpilane":             "Räägi HEV õpilase toetamise kohta.",
-        "Individuaalne õppekava":  "Räägi individuaalse õppekava (IÕK) koostamise kohta.",
-        "Tugiteenused koolis":     "Räägi tugiteenuste kohta koolis — tugiõpetaja, logopeed, psühholoog.",
-        "Õpiraskused":             "Räägi õpiraskuste kohta — düsleksia, ADHD ja teised.",
-        "Andekas laps":            "Räägi andeka lapse toetamise kohta koolis.",
-        "Lapsevanemale":           "Räägi lapsevanema rollist ja kooliga koostöö tegemisest.",
-        "Käitumisraskused":        "Räägi käitumisraskuste põhjuste ja lahenduste kohta.",
-    }
 
     cols = st.columns(4)
     for i, teema in enumerate(TEEMAD):
@@ -1201,7 +1212,7 @@ Loo täielik, kooliks valmis materjal. Struktuur peab olema selge ja visuaalselt
 
             # Saada assistendile
             st.markdown("<div style='margin-top:0.5rem;'></div>", unsafe_allow_html=True)
-            if st.button("💬 Küsi assistendilt nõu selle materjali kohta", use_container_width=True, key="mat_to_chat"):
+            if st.button("💬 Küsi assistendilt selle materjali kasutamise kohta", use_container_width=True, key="mat_to_chat"):
                 st.session_state.leht = "assistent"
                 st.session_state.kiirteema = f"Vaatasin just loodud õppematerjali teemal '{teema_sisend}' ({erivajadus}, {klass}). Kas saad anda nõu, kuidas seda tundi kasutada?"
                 st.rerun()
@@ -1391,7 +1402,17 @@ elif leht == "diferentseeri":
                 </div>
                 """, unsafe_allow_html=True)
 
-                if st.button(f"💬 Küsi assistendilt {t['ikoon']}", key=f"dif_chat_{j}", use_container_width=True):
+                DIF_GENITIIV = {
+                    "Õpiraskused (nt düsleksia)":      "õpiraskuste",
+                    "Tähelepanuraskused (nt ADHD)":    "tähelepanuraskuste",
+                    "Sensoorne tundlikkus":             "sensoorse tundlikkuse",
+                    "Keelelised raskused":              "keeleliste raskustega õpilaste",
+                    "Autismispektri häire (ATH)":       "autismispektri häire",
+                    "Füüsilised erivajadused":          "füüsiliste erivajadustega õpilaste",
+                    "Üldised diferentseerimise põhimõtted": "diferentseerimise",
+                }
+                gen2 = DIF_GENITIIV.get(t['pealkiri'], t['pealkiri'].lower())
+                if st.button(f"💬 Küsi assistendilt {gen2} kohta", key=f"dif_chat_{j}", use_container_width=True):
                     st.session_state.leht = "assistent"
                     st.session_state.kiirteema = (
                         f"Räägi lähemalt sellest, kuidas diferentseerida ülesandeid "
